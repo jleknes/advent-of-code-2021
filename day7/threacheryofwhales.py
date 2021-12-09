@@ -54,16 +54,22 @@ def iter_search(positions):
     r = len(positions)
     while (l <= r) :
         m = int(l + (r - l) / 2) # m = (l + r) / 2
-        if ((r == l + 1) and total_cost_position(positions, l) <= total_cost_position(positions, r)):
-            return total_cost_position(positions, l)
+        cost_l = total_cost_position(positions, l)
+        cost_r = total_cost_position(positions, l)
+        if ((r == l + 1) and cost_l <= cost_r):
+            return cost_l
         
-        if ((r == l + 1) and total_cost_position(positions, l) > total_cost_position(positions, r)):
-            return total_cost_position(positions, r)
+        if ((r == l + 1) and cost_l > cost_r):
+            return cost_r
 
-        if (total_cost_position(positions, m) < total_cost_position(positions, m + 1) and total_cost_position(positions, m) < total_cost_position(positions, m - 1)):
-            return total_cost_position(positions, m)
+        cost_m = total_cost_position(positions, m)
+        cost_m_plus_one = total_cost_position(positions, m+1)
+        cost_m_minus_one = total_cost_position(positions, m-1)
 
-        if (total_cost_position(positions, m) < total_cost_position(positions, m + 1) and total_cost_position(positions, m) > total_cost_position(positions, m - 1)):
+        if (cost_m < cost_m_plus_one and cost_m < cost_m_minus_one):
+            return cost_m
+
+        if (cost_m < cost_m_plus_one and cost_m > cost_m_minus_one):
             r = m - 1
         else :
             l = m + 1
