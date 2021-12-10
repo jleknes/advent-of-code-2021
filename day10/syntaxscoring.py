@@ -1,7 +1,7 @@
 import fileinput, time
 from collections import deque
 
-corr_separators = {"]": "[", "}": "{", ")": "(", ">": "<"}
+openers_closers = {"]": "[", "}": "{", ")": "(", ">": "<"}
 part_one_points = {")": 3, "]": 57, "}": 1197, ">": 25137}
 part_two_points = {"(": 1, "[": 2, "{": 3, "<": 4}
 
@@ -12,10 +12,12 @@ def part_one():
     for line in fileinput.input():
         stack = deque()
         for char in line.strip():
-            if char in corr_separators:
-                if not stack.pop() == corr_separators[char]:
+            # character is a closer
+            if char in openers_closers:
+                if not stack.pop() == openers_closers[char]:
                     illegal_chars.append(char)
                     break
+            # character is an opener
             else:
                 stack.append(char)
         pass
@@ -33,10 +35,12 @@ def part_two():
         stack = deque()
         corrupted = False
         for char in line.strip():
-            if char in corr_separators:
-                if not stack.pop() == corr_separators[char]:
+            # character is a closer
+            if char in openers_closers:
+                if not stack.pop() == openers_closers[char]:
                     corrupted = True
                     break
+            # character is an opener
             else:
                 stack.append(char)
         if not corrupted:
