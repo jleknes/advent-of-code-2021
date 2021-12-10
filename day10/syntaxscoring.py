@@ -2,7 +2,7 @@ import fileinput, time, math
 from collections import deque
 
 corr_separators = {"]": "[", "}": "{", ")": "(", ">": "<"}
-points = {")": 3, "]": 57, "}": 1197, ">": 25137}
+part_one_points = {")": 3, "]": 57, "}": 1197, ">": 25137}
 part_two_points = {"(": 1, "[": 2, "{": 3, "<": 4}
 
 
@@ -11,7 +11,6 @@ def part_one():
     illegal_chars = []
     for line in fileinput.input():
         stack = deque()
-
         for char in line.strip():
             if char in corr_separators:
                 print(stack)
@@ -24,10 +23,9 @@ def part_one():
                 stack.append(char)
         print(illegal_chars)
         pass
-
     sum = 0
     for char in illegal_chars:
-        sum += points[char]
+        sum += part_one_points[char]
     print(sum)
     print("--- %s seconds ---" % (time.time() - start_time))
 
