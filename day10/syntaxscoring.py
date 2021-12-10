@@ -1,4 +1,4 @@
-import fileinput, time, math
+import fileinput, time
 from collections import deque
 
 corr_separators = {"]": "[", "}": "{", ")": "(", ">": "<"}
@@ -13,15 +13,11 @@ def part_one():
         stack = deque()
         for char in line.strip():
             if char in corr_separators:
-                print(stack)
-                if stack[len(stack) - 1] == corr_separators[char]:
-                    stack.pop()
-                else:
+                if not stack.pop() == corr_separators[char]:
                     illegal_chars.append(char)
                     break
             else:
                 stack.append(char)
-        print(illegal_chars)
         pass
     sum = 0
     for char in illegal_chars:
@@ -35,27 +31,23 @@ def part_two():
     scores = []
     for line in fileinput.input():
         stack = deque()
-        illegal = False
+        corrupted = False
         for char in line.strip():
             if char in corr_separators:
-                if stack[len(stack) - 1] == corr_separators[char]:
-                    stack.pop()
-                else:
-                    illegal = True
+                if not stack.pop() == corr_separators[char]:
+                    corrupted = True
                     break
             else:
                 stack.append(char)
-        if not illegal:
+        if not corrupted:
             score = 0
             for i in range(len(stack)):
-                score *= 5
-                points = part_two_points[stack.pop()]
-                score += points
+                score = score * 5 + part_two_points[stack.pop()]
             scores.append(score)
         pass
     # print middle element of scores
     scores.sort()
-    print(scores[math.floor(len(scores) / 2)])
+    print(scores[len(scores) // 2])
     print("--- %s seconds ---" % (time.time() - start_time))
 
 
