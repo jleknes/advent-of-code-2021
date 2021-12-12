@@ -53,13 +53,15 @@ def part_one():
     dfs('start','start')
     print(paths)
     print(len(paths))
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 def part_two():
-    part_two = True
     start_time = time.time()
+    part_two = True
     read_input()
     dfs('start','start')
     print(paths)
     print(len(paths))
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 part_two()
