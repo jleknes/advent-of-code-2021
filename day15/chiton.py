@@ -37,7 +37,31 @@ def solve_part_one():
                 lowest_risk[newx][newy] = total_risk + risk[newx][newy]
                 queue.append((newx, newy, lowest_risk[newx][newy]))
     print("count", count)
+    for i in range(len(risk)):
+        print(lowest_risk[i])
+
     return lowest_risk[len(lowest_risk) - 1][len(lowest_risk[0]) - 1]
+
+def adj_distance(x, y, distance):
+    current_risk = risk[x][y]
+    if x==0 and y ==0:
+        return 0
+    if x==0:
+        return distance[(x,y-1)]+current_risk
+    if y==0:
+        return distance[(x-1,y)]+current_risk
+    return min (distance[(x-1,y)]+current_risk, distance[(x,y-1)]+current_risk)
+
+def solve_greedy():
+    size = len(risk)
+    distance = {}
+    for i in range(size):
+        for j in range(i, size):
+            distance[(i,j)]=adj_distance(i,j,distance)
+        for j in range(i, size):
+            distance[(j,i)]=adj_distance(j,i,distance)
+    return distance
+
 
 
 def get_adjacent(x, y):
@@ -101,7 +125,10 @@ def enlarge_grid(grid):
 
 def part_one():
     start_time = time.time()
-
+    #solve_part_one()
+    distance = solve_greedy()
+    #print(distance)
+    print(distance[len(risk)-1,len(risk)-1])
     print("part one:", solve())
 
     print("--- %s seconds ---" % (time.time() - start_time))
@@ -112,7 +139,11 @@ def part_two():
 
     global risk
     risk = enlarge_grid(risk)
-    print("part one:", solve())
+
+    distance = solve_greedy()
+    print(distance[len(risk)-1,len(risk)-1])
+
+    print("part two:", solve())
     print("--- %s seconds ---" % (time.time() - start_time))
 
 
