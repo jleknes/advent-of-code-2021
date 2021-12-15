@@ -46,14 +46,12 @@ def read_input():
             connections[e2] = set()
         connections[e1].add(e2)
         connections[e2].add(e1)
-    print(connections)
 
 
 def part_one():
     start_time = time.time()
     read_input()
     dfs("start", "start")
-    print(paths)
     print(len(paths))
     print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -63,7 +61,6 @@ def part_two():
     part_two = True
     read_input()
     dfs("start", "start")
-    print(paths)
     print(len(paths))
     print("--- %s seconds ---" % (time.time() - start_time))
 
