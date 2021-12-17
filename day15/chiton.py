@@ -1,17 +1,6 @@
-import fileinput, time, sys
+import fileinput, time
 from collections import deque
 import heapq
-
-
-risk = []
-
-
-def read_input():
-    for line in fileinput.input():
-        gridline = []
-        for i in range(len(line.strip())):
-            gridline.append(int(line[i]))
-        risk.append(gridline)
 
 
 def printgrid(input):
@@ -42,35 +31,48 @@ def solve_part_one():
 
     return lowest_risk[len(lowest_risk) - 1][len(lowest_risk[0]) - 1]
 
+
 def adj_distance(x, y, distance):
     current_risk = risk[x][y]
-    if x==0 and y ==0:
+    if x == 0 and y == 0:
         return 0
-    if x==0:
-        return distance[(x,y-1)]+current_risk
-    if y==0:
-        return distance[(x-1,y)]+current_risk
-    return min (distance[(x-1,y)]+current_risk, distance[(x,y-1)]+current_risk)
+    if x == 0:
+        return distance[(x, y - 1)] + current_risk
+    if y == 0:
+        return distance[(x - 1, y)] + current_risk
+    return min(distance[(x - 1, y)] + current_risk, distance[(x, y - 1)] + current_risk)
 
+
+# will not work for part two
 def solve_greedy():
     size = len(risk)
     distance = {}
     for i in range(size):
         for j in range(i, size):
-            distance[(i,j)]=adj_distance(i,j,distance)
+            distance[(i, j)] = adj_distance(i, j, distance)
         for j in range(i, size):
-            distance[(j,i)]=adj_distance(j,i,distance)
+            distance[(j, i)] = adj_distance(j, i, distance)
     return distance
 
 
+risk = []
+
+
+def read_input():
+    for line in fileinput.input():
+        gridline = []
+        for i in range(len(line.strip())):
+            gridline.append(int(line[i]))
+        risk.append(gridline)
+
 
 def get_adjacent(x, y):
-    paths = []
+    adjacent_points = []
     pairs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     for dx, dy in pairs:
         if x + dx > -1 and y + dy > -1 and x + dx < len(risk) and y + dy < len(risk[x]):
-            paths.append((x + dx, y + dy))
-    return paths
+            adjacent_points.append((x + dx, y + dy))
+    return adjacent_points
 
 
 # Dijkstra with pq
@@ -79,7 +81,7 @@ def solve():
     for i in range(len(risk)):
         for j in range(len(risk[0])):
             unvisited_nodes.add((i, j))
-    # init distances to a high value
+    # init all distances to a high value
     distances = {}
     for node in unvisited_nodes:
         distances[node] = 1000000
@@ -125,23 +127,14 @@ def enlarge_grid(grid):
 
 def part_one():
     start_time = time.time()
-    #solve_part_one()
-    distance = solve_greedy()
-    #print(distance)
-    print(distance[len(risk)-1,len(risk)-1])
     print("part one:", solve())
-
     print("--- %s seconds ---" % (time.time() - start_time))
 
 
 def part_two():
     start_time = time.time()
-
     global risk
     risk = enlarge_grid(risk)
-
-    distance = solve_greedy()
-    print(distance[len(risk)-1,len(risk)-1])
 
     print("part two:", solve())
     print("--- %s seconds ---" % (time.time() - start_time))
