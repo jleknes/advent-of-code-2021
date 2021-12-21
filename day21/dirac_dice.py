@@ -1,5 +1,8 @@
 import fileinput
+import numpy as np
 from os import read
+from functools import cache
+import copy
 
 
 def read_input():
@@ -23,8 +26,7 @@ def roll_dice(last_rolled):
     return sum, last_rolled
 
 
-def main():
-    positions = read_input()
+def part_one(positions):
     score = [0, 0]
     rolls = 0
     player_in_turn = 0
@@ -38,23 +40,65 @@ def main():
         positions[player_in_turn] %= 10
         positions[player_in_turn] += 1
         score[player_in_turn] += positions[player_in_turn]
-        print(
-            "player rolling:",
-            player_in_turn,
-            "last_rolled_after_update:",
-            last_rolled,
-            "sum: ",
-            sum,
-            "new position:",
-            positions[player_in_turn],
-            "score player 1, score player 2:",
-            score[0],
-            score[1],
-        )
         # change turn
         player_in_turn = 1 - player_in_turn
 
-    print(score[player_in_turn] * rolls)
+    return score[player_in_turn] * rolls
+
+
+def roll_dirac():
+    sums = []
+    for i in range(1, 4):
+        for j in range(1, 4):
+            for k in range(1, 4):
+                sums.append(i + j + k)
+    sums.sort()
+    return sums
+
+
+@cache
+def score(score, pos, sum):
+    score += newpos(pos, sum)
+    return score
+
+
+@cache
+def newpos(pos, sum):
+    pos += sum
+    pos -= 1
+    pos %= 10
+    pos += 1
+    return pos
+
+
+@cache
+def victories(p1, p2, score1, score2):
+
+    num_vict = 0
+
+    num_losses = 0
+
+    for sum in roll_dirac():
+        pos1 = newpos(p1, sum)
+        roll1_score = score(score1, p1, sum)
+        if roll1_score > 20:
+            num_vict += 1
+        else:
+            ls, vt = victories(p2, pos1, score2, roll1_score)
+            num_losses += ls
+            num_vict += vt
+    return (num_vict, num_losses)
+
+
+def part_two(positions):
+    print(positions[0], positions[1])
+    print(victories(positions[0], positions[1], 0, 0))
+
+
+def main():
+    positions = read_input()
+    print(part_one(copy.deepcopy(positions)))
+    part_two(positions)
 
 
 main()
