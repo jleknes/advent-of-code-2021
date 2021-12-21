@@ -1,6 +1,4 @@
-import fileinput
-import numpy as np
-from os import read
+import fileinput, time
 from functools import cache
 import copy
 
@@ -46,13 +44,13 @@ def part_one(positions):
     return score[player_in_turn] * rolls
 
 
+@cache
 def roll_dirac():
     sums = []
     for i in range(1, 4):
         for j in range(1, 4):
             for k in range(1, 4):
                 sums.append(i + j + k)
-    sums.sort()
     return sums
 
 
@@ -87,14 +85,15 @@ def victories(p1, p2, score1, score2):
 
 
 def part_two(positions):
-    print(positions[0], positions[1])
     print(victories(positions[0], positions[1], 0, 0))
 
 
 def main():
+    start_time = time.time()
     positions = read_input()
     print(part_one(copy.deepcopy(positions)))
     part_two(positions)
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 
 main()
