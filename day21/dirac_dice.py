@@ -56,13 +56,11 @@ def roll_dirac():
     return sums
 
 
-@cache
 def score(score, pos, sum):
     score += newpos(pos, sum)
     return score
 
 
-@cache
 def newpos(pos, sum):
     pos += sum
     pos -= 1
@@ -73,9 +71,7 @@ def newpos(pos, sum):
 
 @cache
 def victories(p1, p2, score1, score2):
-
     num_vict = 0
-
     num_losses = 0
 
     for sum in roll_dirac():
