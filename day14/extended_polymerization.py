@@ -1,8 +1,8 @@
 import fileinput, time
 from collections import Counter
+from functools import cache
 
 rules = {}
-memo = {}
 
 
 def read_input():
@@ -16,17 +16,13 @@ def read_input():
     return template
 
 
+@cache
 def count(seq, steps):
     if steps == 0:
         return Counter(seq)
-    # slå opp i tabellen hvis innslag eksisterer
-    if seq + str(steps) in memo:
-        return memo[seq + str(steps)]
-    else:
-        insert = rules[seq]
-        res = count(seq[0:1] + insert, steps - 1) + count(insert + seq[1:2], steps - 1) - Counter(insert)
-        memo[seq + str(steps)] = res
-        return res
+    insert = rules[seq]
+    res = count(seq[0:1] + insert, steps - 1) + count(insert + seq[1:2], steps - 1) - Counter(insert)
+    return res
 
 
 def main():
