@@ -85,13 +85,13 @@ def victories(p1, p2, score1, score2):
 
 
 def part_two(positions):
-    print(victories(positions[0], positions[1], 0, 0))
+    print("part two (victories / losses):", victories(positions[0], positions[1], 0, 0))
 
 
 def main():
     start_time = time.time()
     positions = read_input()
-    print(part_one(copy.deepcopy(positions)))
+    print("part one:", part_one(copy.deepcopy(positions)))
     part_two(positions)
     print("--- %s seconds ---" % (time.time() - start_time))
 
